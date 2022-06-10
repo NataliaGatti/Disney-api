@@ -10,10 +10,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_08_231201) do
+ActiveRecord::Schema.define(version: 2022_06_10_122216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "character_by_movies", force: :cascade do |t|
+    t.bigint "character_id", null: false
+    t.bigint "movie_serie_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["character_id"], name: "index_character_by_movies_on_character_id"
+    t.index ["movie_serie_id"], name: "index_character_by_movies_on_movie_serie_id"
+  end
+
+  create_table "characters", force: :cascade do |t|
+    t.string "name"
+    t.integer "age"
+    t.float "weight"
+    t.string "story"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "genders", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "movie_series", force: :cascade do |t|
+    t.string "title"
+    t.string "creation_date"
+    t.integer "calification"
+    t.bigint "gender_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["gender_id"], name: "index_movie_series_on_gender_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -27,4 +61,7 @@ ActiveRecord::Schema.define(version: 2022_06_08_231201) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "character_by_movies", "characters"
+  add_foreign_key "character_by_movies", "movie_series", column: "movie_serie_id"
+  add_foreign_key "movie_series", "genders"
 end
