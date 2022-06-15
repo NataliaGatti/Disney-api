@@ -1,7 +1,5 @@
 class Api::V1::BaseController < ActionController::API
 
-  after_action :verify_authorized, except: :index
-
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   private
