@@ -4,7 +4,15 @@ class Api::V1::CharactersController < Api::V1::BaseController
   before_action :set_character, only: [ :show, :update, :destroy ]
 
   def index
-    @characters = Character.all
+    if params[:name].present?
+      @characters = Character.where("name ILIKE ?", "%#{params[:name]}%")
+    elsif params[:age].present?
+      @characters = Character.select { |char| char.age == params[:age].to_i }
+    elsif params[:movies]
+      @characters = Character.joins(:character_by_movie).select { |movie| movie.character_by_movie.movie_serie_id == params[:movies].to_i }
+    else
+      @characters = Character.all
+    end
   end
 
   def show
